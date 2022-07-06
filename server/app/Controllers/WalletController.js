@@ -6,6 +6,7 @@ const asyncHandler = require('express-async-handler')
 
 const generateKeys = asyncHandler(
     async (req, res) => {
+        //Key pair should be generated based on NID 
         const key = ec.genKeyPair();
         const publicKey = key.getPublic('hex');
         const privateKey = key.getPrivate('hex');
