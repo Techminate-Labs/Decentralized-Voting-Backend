@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 const {
-    generateKeys
+    genVoterWallet
 } = require('../app/Controllers/WalletController')
 const {
     chainList,
@@ -13,7 +13,7 @@ const {
     chainSync
 } = require('../app/Controllers/BlockchainController')
 
-router.get('/generateKeys', generateKeys)
+router.post('/genVoterWallet', genVoterWallet)
 router.post('/transactionCreate', transactionCreate)
 router.get('/minePendingTxs', minePendingTxs)
 

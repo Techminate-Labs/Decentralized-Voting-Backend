@@ -1,3 +1,5 @@
+const fetch = require('node-fetch');
+
 const EC = require('elliptic').ec;
 
 const ec = new EC('secp256k1');
@@ -13,32 +15,43 @@ function generateWallet(nid) {
         const voterInfo = {
             'Public key' : publicKey,
             'Private key' : privateKey,
-            'nid' : nid
+            'nid' : nid,
+            'vote': 1
+        }
+
+        const voterInfoForBlockchain = {
+            'Public key' : publicKey,
+            'nid' : nid,
+            'vote': 1
         }
 
         return voterInfo;
     }
 
-const voterWallet = asyncHandler(
+const genVoterWallet = asyncHandler(
     async (req, res) => {
         const { nid } = req.body
+        
         const url = 'http://localhost:8080/citizen'
         const response = await fetch(url);
         const data = await response.json();
-
+        
         if (response.status == 200){
             data.map((citizen)=>{
-                if(citizen.id === nid){
-                    const voterInfo =  generateWallet(nid)
+                
+                if(citizen.nid === nid){
+                    //call the function to store data in blockchain here 
+                    //
                     res.status(200).json(generateWallet(nid))
                 }
             })
+        }else{
+            const error = 'Please insert a valid NID'
+            res.status(200).json(generateWallet(error))
         }
-
-        res.status(200).json();
     }
 )
 
 module.exports = {
-    generateKeys
+    genVoterWallet
 }

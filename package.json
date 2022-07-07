@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server/server.js",
     "serve": "nodemon server/server.js",
-    "dev": "json-server --watch data/db.json --port 8080"
+    "dev": "json-server --watch server/data/db.json --port 8080"
   },
   "author": "sazid",
   "license": "MIT",
