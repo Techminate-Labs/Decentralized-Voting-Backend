@@ -1,0 +1,35 @@
+{
+    "citizen": [
+        {
+            "id": 1,
+            "nid": "6666555",
+            "name": "sazid"
+        },
+        {
+            "id": 2,
+            "nid": "6666556",
+            "name": "Karim"
+        },
+        {
+            "id": 3,
+            "nid": "6666557",
+            "name": "Rahim"
+        },
+        {
+            "id": 4,
+            "nid": "6666558",
+            "name": "Basar"
+        },
+        {
+            "id": 5,
+            "nid": "6666559",
+            "name": "Jamal"
+        },
+        {
+            "id": 6,
+            "nid": "6666560",
+            "name": "Kamal"
+        }
+       
+    ]
+  }
