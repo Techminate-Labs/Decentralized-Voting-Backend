@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 const EC = require('elliptic').ec;
 
 const asyncHandler = require('express-async-handler')
-
+var ObjectId = require('mongodb').ObjectId;
 //Models
 const Voter = require('../Models/Voter')
 
@@ -40,8 +40,13 @@ function storeVoterInfoInDB(pubKey, nid){
 
 }
 
-function searchVoterInfoInDB(nid){
-    return Voter.findById(nid);
+const searchVoterInfoInDB = async (nid) => {
+    const voter = await Voter.findOne({"nid":nid});
+    if(voter){
+        return true;
+    }else{
+        return false;
+    }
 }
 
 const genVoterWallet = asyncHandler(
@@ -50,15 +55,20 @@ const genVoterWallet = asyncHandler(
         const url = 'http://localhost:8080/citizen'
         const response = await fetch(url);
         const data = await response.json();
-        
+        if(!data){
+            res.status(401)
+            throw new Error('Server Error. Please try again later')
+        }
         if (response.status == 200){
             data.map((citizen)=>{
                 //check if NID exists in govt database
                 if(citizen.nid === nid){
                     //check if the nid is already registered as a voter
-                    const voter = Voter.findById(nid);
-                    if(voter){
-                        res.status(200).json(voter)
+                    if(searchVoterInfoInDB(nid)){
+                        const obj = {
+                            'messege' : 'You are already registered as a Voter'
+                        }
+                        res.status(200).json(obj)
                     }else{
                         //call the function to store data in mongodb
                         const voterInfo = generateWallet(nid);
@@ -67,11 +77,10 @@ const genVoterWallet = asyncHandler(
                             res.status(200).json(voterInfo)
                         }
                     }
+                }else{
+                     
                 }
             })
-        }else{
-            const error = 'Please insert a valid NID'
-            res.status(200).json(error)
         }
     }
 )
