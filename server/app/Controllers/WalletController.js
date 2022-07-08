@@ -40,7 +40,11 @@ function storeVoterInfoInDB(pubKey, nid){
 
 }
 
-const searchVoterInfoInDB = async (nid) => {
+function getCitizenByNid(nid){
+    //
+}
+
+const getVoterByNid = async (nid) => {
     const voter = await Voter.findOne({"nid":nid});
     if(voter){
         return true;
@@ -49,41 +53,90 @@ const searchVoterInfoInDB = async (nid) => {
     }
 }
 
+// const genVoterWallet = asyncHandler(
+//     async (req, res) => {
+//         const { nid } = req.body
+        
+//         const url = 'http://localhost:8080/citizen'
+//         const response = await fetch(url);
+//         const data = await response.json();
+//         let obj = [];
+
+//         // if(!data){
+//         //     res.status(401)
+//         //     throw new Error('Server Error. Please try again later')
+//         // }
+//         if (response.status == 200){
+//             for (let i = 0; i < data.length; i++){
+//                 console.log(data[i].nid)
+//                 console.log(nid)
+//                 //check if NID exists in govt database
+//                 if(data[i].nid == nid){
+//                     //check if the nid is already exists in registered voter list
+//                     if(getVoterByNid(nid)){
+//                         const message = {
+//                             'messege' : 'You are already registered as a Voter'
+//                         }
+//                         obj.push(message)
+//                     }else{
+//                         //call the function to store data in mongodb
+//                         const voterInfo = generateWallet(nid);
+//                         const success = storeVoterInfoInDB(voterInfo.Public_key, voterInfo.nid);
+//                         if (success){
+//                             obj.push(voterInfo)
+//                         }
+//                     }
+//                 }else{
+//                     console.log('your nid is not valid : '+ data[i].nid)
+//                 }
+//             }
+//             res.status(200).json(obj)
+//         }
+//     }
+// )
+
 const genVoterWallet = asyncHandler(
     async (req, res) => {
         const { nid } = req.body
+        
         const url = 'http://localhost:8080/citizen'
         const response = await fetch(url);
         const data = await response.json();
-        if(!data){
-            res.status(401)
-            throw new Error('Server Error. Please try again later')
-        }
+        let obj = [];
+
+        // if(!data){
+        //     res.status(401)
+        //     throw new Error('Server Error. Please try again later')
+        // }
         if (response.status == 200){
-            data.map((citizen)=>{
+            for (let i = 0; i < data.length; i++){
+                console.log(data[i].nid)
+                console.log(nid)
                 //check if NID exists in govt database
-                if(citizen.nid === nid){
-                    //check if the nid is already registered as a voter
-                    if(searchVoterInfoInDB(nid)){
-                        const obj = {
+                if(data[i].nid == nid){
+                    //check if the nid is already exists in registered voter list
+                    if(getVoterByNid(nid)){
+                        const message = {
                             'messege' : 'You are already registered as a Voter'
                         }
-                        res.status(200).json(obj)
+                        obj.push(message)
                     }else{
                         //call the function to store data in mongodb
                         const voterInfo = generateWallet(nid);
                         const success = storeVoterInfoInDB(voterInfo.Public_key, voterInfo.nid);
                         if (success){
-                            res.status(200).json(voterInfo)
+                            obj.push(voterInfo)
                         }
                     }
                 }else{
-                     
+                    console.log('your nid is not valid : '+ data[i].nid)
                 }
-            })
+            }
+            res.status(200).json(obj)
         }
     }
 )
+
 
 module.exports = {
     genVoterWallet
