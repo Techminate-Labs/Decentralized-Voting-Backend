@@ -2,6 +2,12 @@ const express = require('express')
 const router = express.Router()
 
 const {
+    citizenGetByNid,
+    citizenCreate
+
+} = require('../app/Controllers/CitizenController')
+
+const {
     genVoterWallet
 } = require('../app/Controllers/WalletController')
 const {
@@ -12,6 +18,9 @@ const {
     nodeConnection,
     chainSync
 } = require('../app/Controllers/BlockchainController')
+
+router.post('/citizenCreate', citizenCreate)
+router.get('/citizenGetByNid', citizenGetByNid)
 
 router.post('/genVoterWallet', genVoterWallet)
 router.post('/transactionCreate', transactionCreate)
