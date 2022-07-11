@@ -4,11 +4,12 @@ const Citizen = require('../models/Citizen')
 
 const citizenGetByNid = asyncHandler(
     async (req, res) => {
-        const citizen = await Citizen.findById(req.params.id)
+        const nid = req.params.id;
+        const citizen = await Citizen.findOne({"nid":nid});
 
         if(!citizen) {
             res.status(400)
-            throw new Error('citizen not found')
+            throw new Error('Nid is not valid')
         }
 
         res.status(200).json(citizen)

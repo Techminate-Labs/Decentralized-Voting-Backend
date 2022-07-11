@@ -110,24 +110,9 @@ const genVoterWallet = asyncHandler(
         // }
         if (response.status == 200){
             for (let i = 0; i < data.length; i++){
-                console.log(data[i].nid)
-                console.log(nid)
                 //check if NID exists in govt database
                 if(data[i].nid == nid){
-                    //check if the nid is already exists in registered voter list
-                    if(getVoterByNid(nid)){
-                        const message = {
-                            'messege' : 'You are already registered as a Voter'
-                        }
-                        obj.push(message)
-                    }else{
-                        //call the function to store data in mongodb
-                        const voterInfo = generateWallet(nid);
-                        const success = storeVoterInfoInDB(voterInfo.Public_key, voterInfo.nid);
-                        if (success){
-                            obj.push(voterInfo)
-                        }
-                    }
+                 
                 }else{
                     console.log('your nid is not valid : '+ data[i].nid)
                 }

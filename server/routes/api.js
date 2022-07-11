@@ -20,7 +20,7 @@ const {
 } = require('../app/Controllers/BlockchainController')
 
 router.post('/citizenCreate', citizenCreate)
-router.get('/citizenGetByNid', citizenGetByNid)
+router.get('/citizenGetByNid/:id', citizenGetByNid)
 
 router.post('/genVoterWallet', genVoterWallet)
 router.post('/transactionCreate', transactionCreate)
