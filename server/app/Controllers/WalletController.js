@@ -101,10 +101,22 @@ const validateNid = asyncHandler(
     async (req, res) => {
         const { nid } = req.body
         const citizen = await Citizen.findOne({"nid":nid});
-        if(citizen !== null){
-            res.status(200).json(citizen)
+        const voter = await Voter.findOne({"nid":nid});
+        if(citizen == null){
+            let obj1 = {
+                'message' : 'invalid nid'
+            }
+            res.status(200).json(obj1)
+        }else if(voter !== null){
+            //check if already registered as a voter
+            let obj2 = {
+                'message' : 'you are already registered as a voter',
+                'nid':voter.nid,
+                'public_key' : voter.pubKey
+            }
+            res.status(200).json(obj2)
         }else{
-            res.status(200).json('On process')
+            res.status(200).json('on processing')
         }
         
     }
