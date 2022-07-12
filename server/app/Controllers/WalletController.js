@@ -116,7 +116,10 @@ const validateNid = asyncHandler(
             }
             res.status(200).json(obj2)
         }else{
-            res.status(200).json('on processing')
+            let obj3 = {
+                'message' : 'not found in the record'
+            }
+            res.status(404).json(obj3)
         }
         
     }

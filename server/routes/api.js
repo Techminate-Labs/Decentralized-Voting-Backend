@@ -11,6 +11,7 @@ const {
     validateNid,
     voterRegistration
 } = require('../app/Controllers/WalletController')
+
 const {
     chainList,
     transactionCreate,
@@ -33,7 +34,7 @@ router.post('/citizenCreate', citizenCreate)
 router.get('/citizenGetByNid/:id', citizenGetByNid)
 
 //voter
-router.get('/validateNid', validateNid)
+router.post('/validateNid', validateNid)
 router.post('/voterRegistration', voterRegistration)
 
 
