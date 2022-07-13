@@ -99,7 +99,7 @@ const voterRegistration = asyncHandler(
 
 const validateNid = asyncHandler(
     async (req, res) => {
-        const { nid } = req.body
+        const { nid } = req.body;
         const citizen = await Citizen.findOne({"nid":nid});
         const voter = await Voter.findOne({"nid":nid});
         if(citizen == null){
@@ -117,9 +117,9 @@ const validateNid = asyncHandler(
             res.status(200).json(obj2)
         }else{
             let obj3 = {
-                'message' : 'not found in the record'
+                'message' : '404'
             }
-            res.status(404).json(obj3)
+            res.status(200).json(obj3)
         }
         
     }
