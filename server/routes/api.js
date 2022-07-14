@@ -10,7 +10,7 @@ const {
 const {
     validateNid,
     voterRegistration
-} = require('../app/Controllers/WalletController')
+} = require('../app/Controllers/VoterController')
 
 const {
     chainList,

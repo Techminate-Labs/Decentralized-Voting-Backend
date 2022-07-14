@@ -54,7 +54,30 @@ const validateNid = asyncHandler(
 
 const voterRegistration = asyncHandler(
     async (req, res) => {
-        const { nid, publicKey  } = req.body
+        const { nid, publicKey  } = req.body;
+        const voter = await Voter.findOne({"nid":nid});
+
+        if(voter){
+            res.status(200).json({'message' : 'you are already registered as a voter'});
+        }else{
+            const success = Voter.create({
+                nid: nid,
+                pubKey: publicKey,
+                vote: 1
+            })
+    
+            if(success){
+                let obj = {
+                    'message' : 'Voter registration completed',
+                    'nid':nid,
+                    'public_key' : publicKey,
+                    'vote': 1
+                }
+                res.status(200).json(obj);
+            }else{
+                res.status(200).json({'message' : 'Try again'});
+            }
+        }
     }
 )
 
