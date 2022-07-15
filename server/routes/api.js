@@ -9,7 +9,9 @@ const {
 
 const {
     validateNid,
-    voterRegistration
+    voterRegistration,
+    voterGetByPubKey,
+    voterGetByNid
 } = require('../app/Controllers/VoterController')
 
 const {
@@ -36,6 +38,8 @@ router.get('/citizenGetByNid/:id', citizenGetByNid)
 //voter
 router.post('/validateNid', validateNid)
 router.post('/voterRegistration', voterRegistration)
+router.get('/voterGetByPubKey/:pk', voterGetByPubKey)
+router.get('/voterGetByNid/:nid', voterGetByNid)
 
 
 module.exports = router

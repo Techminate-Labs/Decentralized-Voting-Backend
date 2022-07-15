@@ -7,22 +7,6 @@ var ObjectId = require('mongodb').ObjectId;
 const Voter = require('../Models/Voter')
 const Citizen = require('../models/Citizen')
 
-function storeVoterInfoInDB(pubKey, nid){
-    //store the voterInfoForDatabase object in mongodb/blockchain\
-    const voter = Voter.create({
-        nid: nid,
-        pubKey: pubKey,
-        vote: 1
-    })
-
-    if(voter){
-        return true;
-    }else{
-        return false;
-    }
-
-}
-
 const validateNid = asyncHandler(
     async (req, res) => {
         const { nid } = req.body;
@@ -60,6 +44,7 @@ const voterRegistration = asyncHandler(
         if(voter){
             res.status(200).json({'message' : 'you are already registered as a voter'});
         }else{
+            //store the voterInfoForDatabase object in mongodb/blockchain
             const success = Voter.create({
                 nid: nid,
                 pubKey: publicKey,
@@ -81,7 +66,55 @@ const voterRegistration = asyncHandler(
     }
 )
 
+const voterGetByPubKey = asyncHandler(
+    async (req, res) => {
+        const voter = await Voter.findOne({"pubKey":req.params.pk});
+
+        if(!voter){
+            let obj1 = {
+                'message' : 'Voter with the public key was not found in the record',
+                'query_status' : '404'
+            }
+            res.status(200).json(obj1);
+        }else{
+            let obj2 = {
+                'message' : 'Voter info found',
+                'query_status' : '200',
+                'nid': voter.nid,
+                'public_key' : voter.pubKey,
+                'vote': voter.vote
+            }
+            res.status(200).json(obj2);
+        }
+    }
+)
+
+const voterGetByNid = asyncHandler(
+    async (req, res) => {
+        const voter = await Voter.findOne({"nid":req.params.nid});
+
+        if(!voter){
+            let obj1 = {
+                'message' : 'Voter with the NID was not found in the record',
+                'query_status' : '404'
+            }
+            res.status(200).json(obj1);
+        }else{
+            let obj2 = {
+                'message' : 'Voter info found',
+                'query_status' : '200',
+                'nid': voter.nid,
+                'public_key' : voter.pubKey,
+                'vote': voter.vote
+            }
+            res.status(200).json(obj2);
+        }
+    }
+)
+
 module.exports = {
     validateNid,
-    voterRegistration
+    voterRegistration,
+    voterGetByPubKey,
+    voterGetByNid
 }
