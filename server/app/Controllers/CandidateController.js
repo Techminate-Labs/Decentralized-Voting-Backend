@@ -6,6 +6,7 @@ var ObjectId = require('mongodb').ObjectId;
 //Models
 const Voter = require('../Models/Voter')
 const Citizen = require('../models/Citizen')
+const Candidate = require('../models/Candidate')
 
 const validateNid = asyncHandler(
     async (req, res) => {
