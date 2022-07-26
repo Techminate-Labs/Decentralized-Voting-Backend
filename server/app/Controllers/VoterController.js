@@ -1,23 +1,24 @@
 const fetch = require('node-fetch');
 
-const asyncHandler = require('express-async-handler')
 var ObjectId = require('mongodb').ObjectId;
 
 //Models
 const Voter = require('../Models/Voter')
 const Citizen = require('../models/Citizen')
 
-const validateNid = asyncHandler(
-    async (req, res) => {
+//Methods
+const validateNid = async (req, res) => {
         const { nid } = req.body;
         const citizen = await Citizen.findOne({"nid":nid});
         const voter = await Voter.findOne({"nid":nid});
+        
         //check if nid is available in govt database
         if(citizen == null){
             let obj1 = {
                 'message' : 'invalid nid'
             }
             res.status(200).json(obj1)
+            return res.status(404).json({error: 'invalid nid'})
         }else if(voter !== null){
             //check if already registered as a voter
             let obj2 = {
@@ -25,7 +26,7 @@ const validateNid = asyncHandler(
                 'nid':voter.nid,
                 'public_key' : voter.pubKey
             }
-            res.status(200).json(obj2)
+            res.status(404).json(obj2)
         }else{
             let obj3 = {
                 'message' : '404'
@@ -34,10 +35,8 @@ const validateNid = asyncHandler(
         }
         
     }
-)
 
-const voterRegistration = asyncHandler(
-    async (req, res) => {
+const voterRegistration = async (req, res) => {
         const { nid, publicKey  } = req.body;
         const voter = await Voter.findOne({"nid":nid});
 
@@ -64,10 +63,9 @@ const voterRegistration = asyncHandler(
             }
         }
     }
-)
 
-const voterGetByPubKey = asyncHandler(
-    async (req, res) => {
+
+const voterGetByPubKey = async (req, res) => {
         const voter = await Voter.findOne({"pubKey":req.params.pk});
 
         if(!voter){
@@ -87,10 +85,9 @@ const voterGetByPubKey = asyncHandler(
             res.status(200).json(obj2);
         }
     }
-)
 
-const voterGetByNid = asyncHandler(
-    async (req, res) => {
+
+const voterGetByNid = async (req, res) => {
         const voter = await Voter.findOne({"nid":req.params.nid});
 
         if(!voter){
@@ -110,7 +107,7 @@ const voterGetByNid = asyncHandler(
             res.status(200).json(obj2);
         }
     }
-)
+
 
 module.exports = {
     validateNid,
