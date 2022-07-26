@@ -1,5 +1,3 @@
-const fetch = require('node-fetch');
-
 const asyncHandler = require('express-async-handler')
 var ObjectId = require('mongodb').ObjectId;
 
@@ -39,25 +37,27 @@ const validateNid = asyncHandler(
 
 const voterRegistration = asyncHandler(
     async (req, res) => {
-        const { nid, publicKey  } = req.body;
-        const voter = await Voter.findOne({"nid":nid});
+        const { name, symble, nid, pubKey, vote  } = req.body;
+        const candidate_exist = await Candidate.findOne({"nid":nid});
 
-        if(voter){
-            res.status(200).json({'message' : 'you are already registered as a voter'});
+        if(candidate_exist){
+            res.status(200).json({'message' : 'you are already registered as a candidate'});
         }else{
             //store the voterInfoForDatabase object in mongodb/blockchain
-            const success = Voter.create({
+            const success = Candidate.create({
+                name:name,
+                symble:symble,
                 nid: nid,
-                pubKey: publicKey,
-                vote: 1
+                pubKey: pubKey,
+                vote: 0
             })
     
             if(success){
                 let obj = {
-                    'message' : 'Voter registration completed',
+                    'message' : 'Candidate registration completed',
                     'nid':nid,
                     'public_key' : publicKey,
-                    'vote': 1
+                    'vote': 0
                 }
                 res.status(200).json(obj);
             }else{
